@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Adaptive IDS | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="dashboard-page">
+
+
+<div class="dashboard-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">🛡</div>
+
+            <div>
+
+                <h2>Adaptive IDS</h2>
+
+                <span>AI Security Center</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-section">
+
+            <p>MAIN MENU</p>
+
+            <a class="nav-item active">
+                <span>▣</span>
+                Dashboard
+            </a>
+
+            <a class="nav-item">
+                <span>◉</span>
+                Live Monitor
+            </a>
+
+            <a class="nav-item" href="/threats">
+
+    <span>⚠</span>
+
+    Threats
+
+    {% if suspicious > 0 %}
+    <b>{{ suspicious }}<packet/b>
+    {% endif %}
+
+</a>
+
+           <a class="nav-item"
+   href="/packet-logs">
+
+    <span>▤</span>
+
+    Packet Logs
+
+</a>
+        </div>
+
+
+        <div class="nav-section">
+
+            <p>SYSTEM</p>
+
+            <a class="nav-item">
+                <span>⚙</span>
+                Settings
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-online">
+
+                <span></span>
+
+                System Online
+
+            </div>
+
+            <small>
+                Adaptive AI Engine
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="breadcrumb">
+                    Security Center / Dashboard
+                </p>
+
+                <h1>Security Overview</h1>
+
+            </div>
+
+
+            <div class="top-status">
+
+                <span class="live-dot"></span>
+
+                LIVE MONITORING
+
+            </div>
+
+        </header>
+
+
+
+        <!-- STAT CARDS -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Total Packets</span>
+
+                    <div class="stat-icon blue">
+                        ◈
+                    </div>
+
+                </div>
+
+                <h2>{{ total }}</h2>
+
+                <p class="stat-description">
+                    Network packets analyzed
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Normal Traffic</span>
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                </div>
+
+                <h2>{{ normal }}</h2>
+
+                <p class="stat-description">
+                    Trusted network activity
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Suspicious Traffic</span>
+
+                    <div class="stat-icon red">
+                        ⚠
+                    </div>
+
+                </div>
+
+                <h2 class="danger-number">
+                    {{ suspicious }}
+                </h2>
+
+                <p class="stat-description">
+                    Potential anomalies detected
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Detection Engine</span>
+
+                    <div class="stat-icon purple">
+                        AI
+                    </div>
+
+                </div>
+
+                <h2 class="engine-status">
+                    ACTIVE
+                </h2>
+
+                <p class="stat-description">
+                    Self-learning anomaly detection
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ANALYTICS -->
+
+        <section class="analytics-grid">
+
+
+            <!-- NETWORK TRAFFIC GRAPH -->
+
+            <div class="panel traffic-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>Network Traffic Analytics</h3>
+
+                        <p>
+                            Real-time packet monitoring
+                        </p>
+
+                    </div>
+
+                    <span class="panel-live">
+                        ● LIVE
+                    </span>
+
+                </div>
+
+
+                <!-- REAL CHART -->
+
+                <div class="real-chart">
+
+                    <canvas id="trafficChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- THREAT STATUS -->
+
+            <div class="panel threat-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>Threat Status</h3>
+
+                        <p>
+                            Current network condition
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {% if suspicious == 0 %}
+
+                <div class="threat-circle safe">
+
+                    <div>
+
+                        <strong>SAFE</strong>
+
+                        <span>No threats</span>
+
+                    </div>
+
+                </div>
+
+                <div class="threat-message">
+
+                    ✓ Network activity appears normal.
+
+                </div>
+
+                {% else %}
+
+                <div class="threat-circle warning">
+
+                    <div>
+
+                        <strong>{{ suspicious }}</strong>
+
+                        <span>Alerts</span>
+
+                    </div>
+
+                </div>
+
+                <div class="threat-message warning-text">
+
+                    ⚠ Suspicious activity detected.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+
+        <!-- RECENT ACTIVITY -->
+
+        <section class="panel activity-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>Recent Network Activity</h3>
+
+                    <p>
+                        Latest packets analyzed by AI
+                    </p>
+
+                </div>
+
+                <span class="packet-count">
+                    {{ total }} packets
+                </span>
+
+            </div>
+
+
+            <div class="packet-table-wrapper">
+
+                <table class="packet-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>TIME</th>
+
+                            <th>SOURCE IP</th>
+
+                            <th>DESTINATION IP</th>
+
+                            <th>PROTOCOL</th>
+
+                            <th>PORT</th>
+
+                            <th>SIZE</th>
+
+                            <th>ANOMALY SCORE</th>
+
+                            <th>STATUS</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for packet in packets %}
+
+                        <tr>
+
+                            <td>
+                                {{ packet[8] }}
+                            </td>
+
+                            <td>
+                                {{ packet[0] }}
+                            </td>
+
+                            <td>
+                                {{ packet[1] }}
+                            </td>
+
+                            <td>
+
+                                {% if packet[2] == 6 %}
+
+                                    TCP
+
+                                {% elif packet[2] == 17 %}
+
+                                    UDP
+
+                                {% else %}
+
+                                    {{ packet[2] }}
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ packet[4] }}
+                            </td>
+
+                            <td>
+                                {{ packet[5] }} B
+                            </td>
+
+                            <td>
+                                {{ "%.2f"|format(packet[6]) }}
+                            </td>
+
+                            <td>
+
+                                {% if packet[7] == "ATTACK" %}
+
+                                    <span class="status-badge attack">
+                                        ⚠ SUSPICIOUS
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge normal">
+                                        ✓ NORMAL
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="8"
+                                class="no-packets">
+
+                                No packet data available
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            Adaptive IDS • AI-Powered Network Intrusion Detection
+
+            <span>
+                System Operational
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- CHART.JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<script>
+
+
+/* =========================================================
+   LIVE PACKET TABLE
+   ========================================================= */
+
+async function updateLivePackets() {
+
+    try {
+
+        const response =
+            await fetch("/api/live-packets");
+
+
+        if (!response.ok) {
+            return;
+        }
+
+
+        const packets =
+            await response.json();
+
+
+        const tableBody =
+            document.querySelector(
+                ".packet-table tbody"
+            );
+
+
+        if (!tableBody) {
+            return;
+        }
+
+
+        tableBody.innerHTML = "";
+
+
+        packets.forEach(packet => {
+
+
+            let protocol =
+                packet.protocol;
+
+
+            if (protocol === 6) {
+
+                protocol = "TCP";
+
+            }
+
+            else if (protocol === 17) {
+
+                protocol = "UDP";
+
+            }
+
+
+            let statusHTML;
+
+
+            if (packet.result === "ATTACK") {
+
+                statusHTML =
+                    '<span class="status-badge attack">⚠ SUSPICIOUS</span>';
+
+            }
+
+            else {
+
+                statusHTML =
+                    '<span class="status-badge normal">✓ NORMAL</span>';
+
+            }
+
+
+            const row = `
+
+                <tr>
+
+                    <td>
+                        ${packet.detection_time}
+                    </td>
+
+                    <td>
+                        ${packet.source_ip}
+                    </td>
+
+                    <td>
+                        ${packet.destination_ip}
+                    </td>
+
+                    <td>
+                        ${protocol}
+                    </td>
+
+                    <td>
+                        ${packet.destination_port}
+                    </td>
+
+                    <td>
+                        ${packet.packet_length} B
+                    </td>
+
+                    <td>
+                        ${packet.anomaly_score}
+                    </td>
+
+                    <td>
+                        ${statusHTML}
+                    </td>
+
+                </tr>
+
+            `;
+
+
+            tableBody.innerHTML += row;
+
+        });
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Live monitoring error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   TRAFFIC CHART
+   ========================================================= */
+
+let trafficChart = null;
+
+
+
+async function updateTrafficChart() {
+
+    try {
+
+        const response =
+            await fetch("/api/traffic-data");
+
+
+        if (!response.ok) {
+            return;
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const labels =
+            data.map(item => item.time);
+
+
+        const values =
+            data.map(item => item.packets);
+
+
+        const canvas =
+            document.getElementById(
+                "trafficChart"
+            );
+
+
+        if (!canvas) {
+            return;
+        }
+
+
+
+        /* -------------------------------------------------
+           CREATE CHART FIRST TIME
+           ------------------------------------------------- */
+
+        if (!trafficChart) {
+
+
+            trafficChart = new Chart(
+                canvas,
+                {
+
+                    type: "line",
+
+
+                    data: {
+
+                        labels: labels,
+
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Packets",
+
+
+                                data:
+                                    values,
+
+
+                                borderWidth: 2,
+
+
+                                tension: 0.4,
+
+
+                                fill: true,
+
+
+                                pointRadius: 3,
+
+
+                                pointHoverRadius: 5,
+
+
+                                borderColor:
+                                    "#38bdf8",
+
+
+                                backgroundColor:
+                                    "rgba(56, 189, 248, 0.12)",
+
+
+                                pointBackgroundColor:
+                                    "#38bdf8",
+
+
+                                pointBorderColor:
+                                    "#38bdf8"
+
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive: true,
+
+
+                        maintainAspectRatio:
+                            false,
+
+
+                        animation: {
+
+                            duration: 500
+
+                        },
+
+
+                        plugins: {
+
+                            legend: {
+
+                                display: false
+
+                            }
+
+                        },
+
+
+                        scales: {
+
+                            x: {
+
+                                ticks: {
+
+                                    color:
+                                        "#94a3b8",
+
+
+                                    maxTicksLimit:
+                                        8
+
+                                },
+
+
+                                grid: {
+
+                                    color:
+                                        "rgba(148, 163, 184, 0.08)"
+
+                                }
+
+                            },
+
+
+                            y: {
+
+                                beginAtZero: true,
+
+
+                                ticks: {
+
+                                    color:
+                                        "#94a3b8",
+
+
+                                    precision: 0
+
+                                },
+
+
+                                grid: {
+
+                                    color:
+                                        "rgba(148, 163, 184, 0.08)"
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+
+            return;
+
+        }
+
+
+
+        /* -------------------------------------------------
+           UPDATE EXISTING CHART
+           ------------------------------------------------- */
+
+        trafficChart.data.labels =
+            labels;
+
+
+        trafficChart.data.datasets[0].data =
+            values;
+
+
+        trafficChart.update(
+            "none"
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Traffic chart error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   INITIAL LOAD
+   ========================================================= */
+
+updateTrafficChart();
+
+updateLivePackets();
+
+
+
+/* =========================================================
+   AUTO UPDATE EVERY 2 SECONDS
+   ========================================================= */
+
+setInterval(
+    updateTrafficChart,
+    2000
+);
+
+
+setInterval(
+    updateLivePackets,
+    2000
+);
+
+
+</script>
+
+
+</body>
+
+</html>

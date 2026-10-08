@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Adaptive IDS | Threats</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<div class="dashboard-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">🛡</div>
+
+            <div>
+
+                <h2>Adaptive IDS</h2>
+
+                <span>AI Security Center</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-section">
+
+            <p>MAIN MENU</p>
+
+
+            <a class="nav-item"
+               href="/dashboard">
+
+                <span>▣</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a class="nav-item">
+
+                <span>◉</span>
+
+                Live Monitor
+
+            </a>
+
+
+            <a class="nav-item active">
+
+                <span>⚠</span>
+
+                Threats
+
+                {% if suspicious > 0 %}
+                <b>{{ suspicious }}</b>
+                {% endif %}
+
+            </a>
+
+
+            <a class="nav-item">
+
+                <span>▤</span>
+
+                Packet Logs
+
+            </a>
+
+        </div>
+
+
+        <div class="nav-section">
+
+            <p>SYSTEM</p>
+
+            <a class="nav-item">
+
+                <span>⚙</span>
+
+                Settings
+
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-online">
+
+                <span></span>
+
+                System Online
+
+            </div>
+
+            <small>
+                Adaptive AI Engine
+            </small>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="breadcrumb">
+                    Security Center / Threats
+                </p>
+
+                <h1>Threat Detection</h1>
+
+            </div>
+
+
+            <div class="top-status">
+
+                <span class="live-dot"></span>
+
+                LIVE MONITORING
+
+            </div>
+
+        </header>
+
+
+
+        <!-- THREAT SUMMARY -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Total Threats</span>
+
+                    <div class="stat-icon red">
+                        ⚠
+                    </div>
+
+                </div>
+
+                <h2 class="danger-number">
+                    {{ suspicious }}
+                </h2>
+
+                <p class="stat-description">
+                    Suspicious packets detected
+                </p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span>Detection Engine</span>
+
+                    <div class="stat-icon purple">
+                        AI
+                    </div>
+
+                </div>
+
+                <h2 class="engine-status">
+                    ACTIVE
+                </h2>
+
+                <p class="stat-description">
+                    AI anomaly detection
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- THREAT TABLE -->
+
+        <section class="panel activity-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>Detected Threats</h3>
+
+                    <p>
+                        Suspicious network activity identified by AI
+                    </p>
+
+                </div>
+
+
+                <span class="panel-live">
+                    ● LIVE
+                </span>
+
+            </div>
+
+
+
+            <div class="packet-table-wrapper">
+
+                <table class="packet-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>TIME</th>
+
+                            <th>SOURCE IP</th>
+
+                            <th>DESTINATION IP</th>
+
+                            <th>PROTOCOL</th>
+
+                            <th>PORT</th>
+
+                            <th>PACKET SIZE</th>
+
+                            <th>ANOMALY SCORE</th>
+
+                            <th>THREAT</th>
+
+                            <th>AI EXPLANATION</th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for packet in threats %}
+
+                        <tr>
+
+                            <td>
+                                {{ packet[8] }}
+                            </td>
+
+
+                            <td>
+                                {{ packet[0] }}
+                            </td>
+
+
+                            <td>
+                                {{ packet[1] }}
+                            </td>
+
+
+                            <td>
+
+                                {% if packet[2] == 6 %}
+
+                                    TCP
+
+                                {% elif packet[2] == 17 %}
+
+                                    UDP
+
+                                {% else %}
+
+                                    {{ packet[2] }}
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ packet[4] }}
+                            </td>
+
+
+                            <td>
+                                {{ packet[5] }} B
+                            </td>
+
+
+                            <td>
+                                {{ "%.2f"|format(packet[6]) }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="status-badge attack">
+                                    ⚠ SUSPICIOUS
+                                </span>
+
+                            </td>
+
+
+                            <!-- AI EXPLANATION -->
+
+                            <td>
+                                {{ packet[9] }}
+                            </td>
+
+
+                        </tr>
+
+
+                        {% else %}
+
+                        <tr>
+
+                            <td colspan="9"
+                                class="no-packets">
+
+                                ✓ No suspicious activity detected
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            Adaptive IDS • AI-Powered Network Intrusion Detection
+
+            <span>
+                System Operational
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>
